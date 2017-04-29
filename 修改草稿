@@ -1,0 +1,40 @@
+1.	从头至尾扫描S2，在S1-tree中寻找S2串的最长前缀，记录下最长前缀在S1和S2中的起始位置和长度。
+	当长度小于15或在S1，S2中的起始位置的差值大于所得前缀的长度，忽略此子串。
+2.	
+
+
+
+伪代码：，还需要画一张简单的图,以示样例：
+Input: S1，S2: two Strings,tree-S1: the suffix tree of S1;
+Output: result_list: a list of substrings' information, whose element is composed of (a substring's start position in S1, a substring's start position in S2, the length of substring)
+===============================================================================================================
+index=0;
+while(index<S2's length){
+	/*select_prefix is a function to find the S2's longest common prefix with S2 using suffix tree tree-S1*/
+	/*If a prefix is found the function will return the start postion of the substring in S1 and the length of the prefix，otherwise a tuple of [-1,0] will be returned*/
+	/*PS: a prefix of S2 is a special substring of S2, which start from the first character*/
+	st,len=tree-S1.select_prefix(S2,index);
+	/*A common prefix(substring) is found*/
+	if(st!=-1){
+		Record the start postion of the prefix in both S1(st) and S2(index);
+		Record the length of the prefix;
+		index+=len;
+	}
+	/*Common prefix is not found*/
+	else{
+		index++;
+	}
+}
+说明源代码：
+A function named select_prefix, which is a member function of suffix tree data structure, is applied to find the longest common prefix between a given input string and a suffix in a suffix tree, which can be finished in linear time. When we search common substrings in a string and a suffix tree, the select_prefix function is used to find a common prefix, then the common prefix is skiped and reused select_prefix to find another common prefix.
+
+
+补充说明suffix_tree的功能：
+For a string's suffix tree contains all its suffixes, each leaf node represents a unique suffix. A suffix is simply a subsequence that begins at any position in the sequence and extend to the end of the sequence. For a pattern, for which we want to search, can be taken as a prefix of a suffix. A prefix is simply a subsequence that begins at the beginning of the sequence and extend to any position of the sequence. A pattern can be found in linear time by traversing a unique path in the tree from the root node to a inner node or a leaf node. In our work, suffix tree is used to find out the common substrings of two biological sequences in a pairwise alignment. 
+
+
+
+conclusion中补充：
+index++有讲究，可以调整窗口大小。因为，小规模的动态规划算法并不耗时，而多次启用在后缀树中搜索最长前缀是费时的。
+算法只针对高度相似的同源序列有用，可以调整算法，比如调整成为之前的递归算法，虽然比较耗时，但是依然在线性时间复杂度以内。
+对于数据集的选用的讨论。
